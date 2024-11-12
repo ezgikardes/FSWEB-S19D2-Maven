@@ -1,9 +1,9 @@
 package com.workintech.s18d4;
 
-
 import com.workintech.s18d4.entity.Account;
 import com.workintech.s18d4.entity.Address;
 import com.workintech.s18d4.entity.Customer;
+import com.workintech.s18d4.exception.CustomerException;
 import com.workintech.s18d4.repository.AccountRepository;
 import com.workintech.s18d4.repository.AddressRepository;
 import com.workintech.s18d4.repository.CustomerRepository;
@@ -314,7 +314,7 @@ class MainTest {
     @DisplayName("AccountService::find")
     void testFindAccount_AccountService() {
         when(mockAccountRepository.findById(1L)).thenReturn(Optional.of(sampleAccountForAccountServiceTest));
-        Account result = accountService.findById(1L);
+        Account result = accountService.find(1L);
         assertEquals(sampleAccountForAccountServiceTest, result);
     }
 
@@ -356,7 +356,7 @@ class MainTest {
     @DisplayName("CustomerService::find")
     void testFindCustomer() {
         when(mockCustomerRepository.findById(1L)).thenReturn(Optional.of(sampleCustomerForCustomerServiceTest));
-        Customer result = customerService.findById(1L);
+        Customer result = customerService.find(1L);
         assertEquals(sampleCustomerForCustomerServiceTest, result);
     }
 
@@ -377,10 +377,10 @@ class MainTest {
         assertEquals(sampleCustomerForCustomerServiceTest, deletedCustomer);
     }
 
-    @Test
-    @DisplayName("CustomerService::delete - Customer not found")
     void testDeleteNotFoundCustomer() {
         when(mockCustomerRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertNull(customerService.delete(1L));
+
+        assertThrows(CustomerException.class, () -> customerService.delete(1L),
+                "Customer with ID 1 cannot be found");
     }
 }
