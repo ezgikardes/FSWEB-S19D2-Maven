@@ -1,5 +1,6 @@
 package com.workintech.s18d4.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,12 +37,11 @@ public class Customer {
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private List<Account> accounts;
+    @JsonIgnore //to avoid infinite loop
+    private List<Account> accounts = new ArrayList<>();
 
     public void addAccount(Account account){
-        if (accounts.isEmpty()){
-            accounts = new ArrayList<>();
-        }
         accounts.add(account);
     }
+
 }

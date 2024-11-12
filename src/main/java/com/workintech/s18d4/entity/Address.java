@@ -16,21 +16,17 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "street")
-    @NotNull
     private String street;
 
     @Column(name = "no")
-    @NotNull
     private Integer no;
 
-    @NotNull
     @Column(name = "city")
     private String city;
 
-    @NotNull
     @Column(name = "country")
     private String country;
 
@@ -38,6 +34,6 @@ public class Address {
     private String description;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "address")
+            CascadeType.MERGE, CascadeType.REFRESH})
     private Customer customer;
 }

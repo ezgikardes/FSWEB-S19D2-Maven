@@ -1,5 +1,6 @@
 package com.workintech.s18d4.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,18 +16,17 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "account_name")
-    @NotNull
     private String accountName;
 
-    @NotNull
     @Column(name = "money_amount")
     private Double moneyAmount;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id")
+    @JsonIgnore  // To avoid infinite loop
     private Customer customer;
 }
