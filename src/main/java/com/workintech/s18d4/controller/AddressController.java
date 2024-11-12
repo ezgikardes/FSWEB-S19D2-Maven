@@ -2,18 +2,17 @@ package com.workintech.s18d4.controller;
 
 import com.workintech.s18d4.entity.Address;
 import com.workintech.s18d4.service.AddressService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/address")
 public class AddressController {
-    AddressService addressService;
 
-    public AddressController(AddressService addressService) {
-        this.addressService = addressService;
-    }
+    AddressService addressService;
 
     @GetMapping
     public List<Address> findAll(){
@@ -21,7 +20,7 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
-    public Address findById(@PathVariable Long id){
+    public Address findById(@PathVariable long id){
         return addressService.findById(id);
     }
 
@@ -31,16 +30,14 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public Address update(@PathVariable Long id, @RequestBody Address address){
-        return addressService.update(id, address);
+    public Address update(@PathVariable long id, @RequestBody Address address){
+        address.setId(id);
+        return addressService.save(address);
     }
 
     @DeleteMapping("/{id}")
-    public Address delete(@PathVariable Long id, Address address){
-        return addressService.delete(id, address);
+    public Address delete(@PathVariable long id){
+        return addressService.delete(id);
     }
-
-
-
 
 }

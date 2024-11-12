@@ -3,58 +3,41 @@ package com.workintech.s18d4.controller;
 import com.workintech.s18d4.dto.CustomerResponse;
 import com.workintech.s18d4.entity.Customer;
 import com.workintech.s18d4.service.CustomerService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/customer")
 public class CustomerController {
-    CustomerService customerService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    private CustomerService customerService;
 
     @GetMapping
-    public List<CustomerResponse> findAll(){
-        List<Customer> customers = customerService.findAll();
-        List<CustomerResponse> customerResponses = new ArrayList<>();
-        for(Customer customer : customers){
-            CustomerResponse customerResponse = new CustomerResponse(
-                    customer.getId(),
-                    customer.getEmail(),
-                    customer.getSalary()
-            );
-            customerResponses.add(customerResponse);
-        }
-        return customerResponses;
+    public List<Customer> findAll () {
+            return customerService.findAll();
     }
 
+
     @GetMapping("/{id}")
-    public CustomerResponse findById(@PathVariable Long id){
-        Customer customer = customerService.findById(id);
-        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getSalary());
+    public Customer findById(@PathVariable long id){
+        return customerService.find(id);
     }
 
     @PostMapping
     public CustomerResponse save(@RequestBody Customer customer){
-        customerService.save(customer);
-        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getSalary());
+        Customer saved = customerService.save(customer);
+        return new CustomerResponse(saved.getId(), saved.getEmail(), saved.getSalary());
     }
 
-    @PutMapping("/{id}")
-    public CustomerResponse update(@PathVariable Long id, @RequestBody Customer customer){
-        customerService.update(id, customer);
-        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getSalary());
-    }
 
     @DeleteMapping("/{id}")
-    public CustomerResponse delete(@PathVariable Long id){
-        Customer customer = customerService.findById(id);
+    public CustomerResponse delete(@PathVariable long id){
+        Customer customer = customerService.find(id);
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getSalary());
     }
 }
