@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface AddressService {
     List<Address> findAll();
-    Address findById(Long id);
+    Address findById(long id);
     Address save(Address address);
-    Address update(Long id, Address address);
-    Address delete(Long id, Address address);
+    Address delete(long id);
 }

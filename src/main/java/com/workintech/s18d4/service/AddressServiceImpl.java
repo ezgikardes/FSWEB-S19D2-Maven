@@ -1,8 +1,10 @@
 package com.workintech.s18d4.service;
 
 import com.workintech.s18d4.entity.Address;
+import com.workintech.s18d4.exception.AddressException;
 import com.workintech.s18d4.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,58 +25,34 @@ public class AddressServiceImpl implements AddressService{
     public List<Address> findAll() {
         List<Address> addresses = addressRepository.findAll();
         if (addresses.isEmpty()){
-            //TODO
-            return null;
+            throw new AddressException("Address list is empty", HttpStatus.NOT_FOUND);
         }
         return addressRepository.findAll();
     }
 
     @Override
-    public Address findById(Long id) {
+    public Address findById(long id) {
         Optional<Address> optionalAddress = addressRepository.findById(id);
         if(optionalAddress.isPresent()){
             return optionalAddress.get();
         } else {
-            //TODO exception
-            return null;
+            throw new AddressException("Address cannot be found", HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public Address save(Address address) {
         if(address == null){
-            return null;
-            //TODO exception
+            throw new AddressException("Address cannot be null", HttpStatus.BAD_REQUEST);
         }
         return addressRepository.save(address);
     }
 
     @Override
-    public Address update(Long id, Address address) {
-        if (address == null){
-            //TODO exception
-            return null;
-        }
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-        if (optionalAddress.isPresent()){
-            addressRepository.save(address);
-        }
-        return address;
+    public Address delete(long id) {
+        Address addressToDelete = findById(id);
+        addressRepository.delete(addressToDelete);
+        return addressToDelete;
     }
-
-    @Override
-    public Address delete(Long id, Address address) {
-        if (address == null){
-            return null;
-            //TODO exception
-        }
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-        if (optionalAddress.isPresent()){
-            return addressRepository.save(address);
-        }
-        return null;
-        //TODO exception
-    }
-
 
 }
